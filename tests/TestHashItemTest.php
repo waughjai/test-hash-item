@@ -47,4 +47,12 @@ class TestHashItemTest extends TestCase
 		$this->assertEquals( \WaughJ\TestHashItem\TestHashItemNumeric( $switch2, 'value', 'dsklsdkjgl' ),'dsklsdkjgl' );
 		$this->assertEquals( \WaughJ\TestHashItem\TestHashItemNumeric( $switch2, 'color', 'dskasdfl' ), 'dskasdfl' );
 	}
+
+	public function testItemObject() : void
+	{
+		$list = [ 'value' => [ 'name' => 'Guy' ] ];
+		$object = [ 'value' => ( object )([ 'name' => 'Guy' ]) ];
+		$this->assertEquals( \WaughJ\TestHashItem\TestHashItemObject( $list, 'value', 'fdhfhjj' ), 'fdhfhjj' );
+		$this->assertEquals( \WaughJ\TestHashItem\TestHashItemObject( $object, 'value', 'dhshfhf' ), ( object )([ 'name' => 'Guy' ]) );
+	}
 }

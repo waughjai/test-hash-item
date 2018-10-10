@@ -28,6 +28,11 @@ namespace WaughJ\TestHashItem
 		return TestHashItem( 'is_numeric', $list, $key, $fallback );
 	}
 
+	function TestHashItemObject( array $list, string $key, $fallback = null )
+	{
+		return TestHashItem( 'is_object', $list, $key, $fallback );
+	}
+
 	function TestHashItem( callable $function, array $list, string $key, $fallback = null )
 	{
 		return ( TestHashItemExists( $list, $key, false ) && $function( $list[ $key ] ) ) ? $list[ $key ] : $fallback;
