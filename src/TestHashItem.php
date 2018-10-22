@@ -33,6 +33,20 @@ namespace WaughJ\TestHashItem
 		return TestHashItem( 'is_object', $list, $key, $fallback );
 	}
 
+	function TestHashItemClass( string $class, array $list, string $key, $fallback = null )
+	{
+		return TestHashItem
+		(
+			function( $value ) use ( $class ): bool
+			{
+				return is_a( $value, $class );
+			},
+			$list,
+			$key,
+			$fallback
+		);
+	}
+
 	function TestHashItem( callable $function, array $list, string $key, $fallback = null )
 	{
 		return ( TestHashItemExists( $list, $key, false ) && $function( $list[ $key ] ) ) ? $list[ $key ] : $fallback;

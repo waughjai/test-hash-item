@@ -17,4 +17,6 @@ TestHashItemNumeric: Tests if the hash has something for the key & is a #.
 
 TestHashItemObject: Tests if the hash has something for the key & is an object.
 
+TestHashItemClass: Tests if the hash has something for the key & is an member of a certain class. Takes 4 arguments, with the last 3 being the usual list, key, & fallback arguments & the 1st argument being the name o' the class to test for.
+
 Finally, TestHashItem has before the other 3 arguments a callable function argument to allow one to create a custom test to be run in addition to testing if the hash map contains the key.
