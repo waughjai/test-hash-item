@@ -5,7 +5,7 @@ namespace WaughJ\TestHashItem
 {
 	function TestHashItemExists( array $list, string $key, $fallback = null )
 	{
-		return ( is_array( $list ) && isset( $list[ $key ] ) ) ? $list[ $key ] : $fallback;
+		return ( is_array( $list ) && array_key_exists( $key, $list ) ) ? $list[ $key ] : $fallback;
 	}
 
 	function TestHashItemString( array $list, string $key, $fallback = null )
@@ -45,6 +45,11 @@ namespace WaughJ\TestHashItem
 			$key,
 			$fallback
 		);
+	}
+
+	function TestHashItemIsTrue( array $list, string $key ) : bool
+	{
+		return TestHashItemExists( $list, $key ) && $list[ $key ];
 	}
 
 	function TestHashItem( callable $function, array $list, string $key, $fallback = null )

@@ -8,6 +8,7 @@ use function \WaughJ\TestHashItem\TestHashItemBool;
 use function \WaughJ\TestHashItem\TestHashItemNumeric;
 use function \WaughJ\TestHashItem\TestHashItemObject;
 use function \WaughJ\TestHashItem\TestHashItemClass;
+use function \WaughJ\TestHashItem\TestHashItemIsTrue;
 
 class TestHashItemTest extends TestCase
 {
@@ -70,5 +71,23 @@ class TestHashItemTest extends TestCase
 		$this->assertEquals( TestHashItemClass( 'DateTime', $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
 		$this->assertEquals( TestHashItemClass( \DateTime::class, $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
 		$this->assertEquals( TestHashItemClass( 'Date', $list, 'date-obj', null ), null );
+	}
+
+	public function testItemIsTrue() : void
+	{
+		$switch1 = [ 'value' => true ];
+		$switch2 = [ 'value' => 1 ];
+		$switch3 = [ 'value' => 0 ];
+		$switch4 = [ 'value' => 'afdafsaf' ];
+		$switch5 = [ 'value' => '' ];
+		$switch6 = [ 'value' => null ];
+		$switch7 = [ 'value' => false ];
+		$this->assertEquals( TestHashItemIsTrue( $switch1, 'value' ), true );
+		$this->assertEquals( TestHashItemIsTrue( $switch2, 'value' ), true );
+		$this->assertEquals( TestHashItemIsTrue( $switch3, 'value' ), false );
+		$this->assertEquals( TestHashItemIsTrue( $switch4, 'value' ), true );
+		$this->assertEquals( TestHashItemIsTrue( $switch5, 'value' ), false );
+		$this->assertEquals( TestHashItemIsTrue( $switch6, 'value' ), false );
+		$this->assertEquals( TestHashItemIsTrue( $switch7, 'value' ), false );
 	}
 }
