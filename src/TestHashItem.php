@@ -12,7 +12,7 @@ class TestHashItem
 
 	public static function getExists( array $list, string $key, $fallback = null )
 	{
-		return $list[ $key ] ?? $fallback;
+		return ( self::exists( $list, $key ) ) ? $list[ $key ] : $fallback;
 	}
 
 	public static function isString( array $list, string $key ) : bool
