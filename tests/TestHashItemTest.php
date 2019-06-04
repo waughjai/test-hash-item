@@ -1,14 +1,7 @@
 <?php
 
 use PHPUnit\Framework\TestCase;
-use function \WaughJ\TestHashItem\TestHashItemExists;
-use function \WaughJ\TestHashItem\TestHashItemString;
-use function \WaughJ\TestHashItem\TestHashItemArray;
-use function \WaughJ\TestHashItem\TestHashItemBool;
-use function \WaughJ\TestHashItem\TestHashItemNumeric;
-use function \WaughJ\TestHashItem\TestHashItemObject;
-use function \WaughJ\TestHashItem\TestHashItemClass;
-use function \WaughJ\TestHashItem\TestHashItemIsTrue;
+use \WaughJ\TestHashItem\TestHashItem;
 
 class TestHashItemTest extends TestCase
 {
@@ -16,61 +9,78 @@ class TestHashItemTest extends TestCase
 	{
 		$has_color = [ 'color' => 'red' ];
 		$no_color = [];
-		$this->assertEquals( TestHashItemExists( $has_color, 'color', null ), 'red' );
-		$this->assertEquals( TestHashItemExists( $no_color, 'color', function( string $name ){ echo $name; } ), function( string $name ){ echo $name; } );
+		$this->assertEquals( TestHashItem::exists( $has_color, 'color' ), true );
+		$this->assertEquals( TestHashItem::exists( $no_color, 'color' ), false );
+		$this->assertEquals( TestHashItem::getExists( $has_color, 'color', null ), 'red' );
+		$this->assertEquals( TestHashItem::getExists( $no_color, 'color', function( string $name ){ echo $name; } ), function( string $name ){ echo $name; } );
 	}
 
 	public function testItemString() : void
 	{
 		$color = [ 'color' => 'red' ];
 		$number = [ 'color' => 255000000 ];
-		$this->assertEquals( TestHashItemString( $color, 'color', null ), 'red' );
-		$this->assertEquals( TestHashItemString( $number, 'color', false ), false );
-		$this->assertEquals( TestHashItemString( $number, 'name', true ), true );
+		$this->assertEquals( TestHashItem::isString( $color, 'color' ), true );
+		$this->assertEquals( TestHashItem::isString( $number, 'color' ), false );
+		$this->assertEquals( TestHashItem::getString( $color, 'color', null ), 'red' );
+		$this->assertEquals( TestHashItem::getString( $number, 'color', false ), false );
+		$this->assertEquals( TestHashItem::getString( $number, 'name', true ), true );
 	}
 
 	public function testItemArray() : void
 	{
 		$array = [ 'color' => [ 255, 0, 0 ] ];
 		$number = [ 'color' => 255000000 ];
-		$this->assertEquals( TestHashItemArray( $array, 'color', 'werasf' ), [ 255, 0, 0 ] );
-		$this->assertEquals( TestHashItemArray( $number, 'color', 'pvpova' ), 'pvpova' );
-		$this->assertEquals( TestHashItemArray( $number, 'name', 234 ), 234 );
+		$this->assertEquals( TestHashItem::isArray( $array, 'color' ), true );
+		$this->assertEquals( TestHashItem::isArray( $number, 'color' ), false );
+		$this->assertEquals( TestHashItem::getArray( $array, 'color', 'werasf' ), [ 255, 0, 0 ] );
+		$this->assertEquals( TestHashItem::getArray( $number, 'color', 'pvpova' ), 'pvpova' );
+		$this->assertEquals( TestHashItem::getArray( $number, 'name', 234 ), 234 );
 	}
 
 	public function testItemBool() : void
 	{
-		$switch1 = [ 'value' => true ];
+		$switch1 = [ 'value' => false ];
 		$switch2 = [ 'value' => 1 ];
-		$this->assertEquals( TestHashItemBool( $switch1, 'value', 'cbbewa' ), true );
-		$this->assertEquals( TestHashItemBool( $switch2, 'value', 'adfgdfg' ), 'adfgdfg' );
-		$this->assertEquals( TestHashItemBool( $switch2, 'color', [ 2, 4, 6 ] ), [ 2, 4, 6 ] );
+		$this->assertEquals( TestHashItem::isBool( $switch1, 'value' ), true );
+		$this->assertEquals( TestHashItem::isBool( $switch2, 'value' ), false );
+		$this->assertEquals( TestHashItem::getBool( $switch1, 'value', 'cbbewa' ), false );
+		$this->assertEquals( TestHashItem::getBool( $switch2, 'value', 'adfgdfg' ), 'adfgdfg' );
+		$this->assertEquals( TestHashItem::getBool( $switch2, 'color', [ 2, 4, 6 ] ), [ 2, 4, 6 ] );
 	}
 
 	public function testItemNumeric() : void
 	{
 		$switch1 = [ 'value' => 1 ];
 		$switch2 = [ 'value' => true ];
-		$this->assertEquals( TestHashItemNumeric( $switch1, 'value', 'asfsfw' ), true );
-		$this->assertEquals( TestHashItemNumeric( $switch2, 'value', 'dsklsdkjgl' ),'dsklsdkjgl' );
-		$this->assertEquals( TestHashItemNumeric( $switch2, 'color', 'dskasdfl' ), 'dskasdfl' );
+		$this->assertEquals( TestHashItem::isNumeric( $switch1, 'value' ), true );
+		$this->assertEquals( TestHashItem::isNumeric( $switch2, 'value' ), false );
+		$this->assertEquals( TestHashItem::getNumeric( $switch1, 'value', 'asfsfw' ), 1 );
+		$this->assertEquals( TestHashItem::getNumeric( $switch2, 'value', 'dsklsdkjgl' ),'dsklsdkjgl' );
+		$this->assertEquals( TestHashItem::getNumeric( $switch2, 'color', 'dskasdfl' ), 'dskasdfl' );
 	}
 
 	public function testItemObject() : void
 	{
 		$list = [ 'value' => [ 'name' => 'Guy' ] ];
 		$object = [ 'value' => ( object )([ 'name' => 'Guy' ]) ];
-		$this->assertEquals( TestHashItemObject( $list, 'value', 'fdhfhjj' ), 'fdhfhjj' );
-		$this->assertEquals( TestHashItemObject( $object, 'value', 'dhshfhf' ), ( object )([ 'name' => 'Guy' ]) );
+		$this->assertEquals( TestHashItem::isObject( $list, 'value' ), false );
+		$this->assertEquals( TestHashItem::isObject( $object, 'value' ), true );
+		$this->assertEquals( TestHashItem::getObject( $list, 'value', 'fdhfhjj' ), 'fdhfhjj' );
+		$this->assertEquals( TestHashItem::getObject( $object, 'value', 'dhshfhf' ), ( object )([ 'name' => 'Guy' ]) );
 	}
 
 	public function testItemClass() : void
 	{
 		$list = [ 'date-string' => '2018-10-22', 'date-obj' => new \DateTime( '2018-10-22' ) ];
-		$this->assertEquals( TestHashItemClass( 'DateTime', $list, 'date-string', null ), null );
-		$this->assertEquals( TestHashItemClass( 'DateTime', $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
-		$this->assertEquals( TestHashItemClass( \DateTime::class, $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
-		$this->assertEquals( TestHashItemClass( 'Date', $list, 'date-obj', null ), null );
+		$this->assertEquals( TestHashItem::isClass( 'DateTime', $list, 'date-string' ), false );
+		$this->assertEquals( TestHashItem::isClass( 'DateTime', $list, 'date-obj' ), true );
+		$this->assertEquals( TestHashItem::isClass( \DateTime::class, $list, 'date-obj' ), true );
+		$this->assertEquals( TestHashItem::isClass( 'Date', $list, 'date-obj' ), false );
+
+		$this->assertEquals( TestHashItem::getClass( 'DateTime', $list, 'date-string', null ), null );
+		$this->assertEquals( TestHashItem::getClass( 'DateTime', $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
+		$this->assertEquals( TestHashItem::getClass( \DateTime::class, $list, 'date-obj', null ), new \DateTime( '2018-10-22' ) );
+		$this->assertEquals( TestHashItem::getClass( 'Date', $list, 'date-obj', null ), null );
 	}
 
 	public function testItemIsTrue() : void
@@ -82,12 +92,12 @@ class TestHashItemTest extends TestCase
 		$switch5 = [ 'value' => '' ];
 		$switch6 = [ 'value' => null ];
 		$switch7 = [ 'value' => false ];
-		$this->assertEquals( TestHashItemIsTrue( $switch1, 'value' ), true );
-		$this->assertEquals( TestHashItemIsTrue( $switch2, 'value' ), true );
-		$this->assertEquals( TestHashItemIsTrue( $switch3, 'value' ), false );
-		$this->assertEquals( TestHashItemIsTrue( $switch4, 'value' ), true );
-		$this->assertEquals( TestHashItemIsTrue( $switch5, 'value' ), false );
-		$this->assertEquals( TestHashItemIsTrue( $switch6, 'value' ), false );
-		$this->assertEquals( TestHashItemIsTrue( $switch7, 'value' ), false );
+		$this->assertEquals( TestHashItem::isTrue( $switch1, 'value' ), true );
+		$this->assertEquals( TestHashItem::isTrue( $switch2, 'value' ), true );
+		$this->assertEquals( TestHashItem::isTrue( $switch3, 'value' ), false );
+		$this->assertEquals( TestHashItem::isTrue( $switch4, 'value' ), true );
+		$this->assertEquals( TestHashItem::isTrue( $switch5, 'value' ), false );
+		$this->assertEquals( TestHashItem::isTrue( $switch6, 'value' ), false );
+		$this->assertEquals( TestHashItem::isTrue( $switch7, 'value' ), false );
 	}
 }

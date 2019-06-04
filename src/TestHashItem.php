@@ -1,59 +1,100 @@
 <?php
 
 declare( strict_types = 1 );
-namespace WaughJ\TestHashItem
+namespace WaughJ\TestHashItem;
+
+class TestHashItem
 {
-	function TestHashItemExists( array $list, string $key, $fallback = null )
+	public static function exists( array $list, string $key ) : bool
 	{
-		return ( array_key_exists( $key, $list ) ) ? $list[ $key ] : $fallback;
+		return array_key_exists( $key, $list );
 	}
 
-	function TestHashItemString( array $list, string $key, $fallback = null )
+	public static function getExists( array $list, string $key, $fallback = null )
 	{
-		return TestHashItem( 'is_string', $list, $key, $fallback );
+		return $list[ $key ] ?? $fallback;
 	}
 
-	function TestHashItemArray( array $list, string $key, $fallback = null )
+	public static function isString( array $list, string $key ) : bool
 	{
-		return TestHashItem( 'is_array', $list, $key, $fallback );
+		return self::testIs( 'is_string', $list, $key );
 	}
 
-	function TestHashItemBool( array $list, string $key, $fallback = null )
+	public static function getString( array $list, string $key, $fallback = null )
 	{
-		return TestHashItem( 'is_bool', $list, $key, $fallback );
+		return self::test( 'is_string', $list, $key, $fallback );
 	}
 
-	function TestHashItemNumeric( array $list, string $key, $fallback = null )
+	public static function isArray( array $list, string $key ) : bool
 	{
-		return TestHashItem( 'is_numeric', $list, $key, $fallback );
+		return self::testIs( 'is_array', $list, $key );
 	}
 
-	function TestHashItemObject( array $list, string $key, $fallback = null )
+	public static function getArray( array $list, string $key, $fallback = null )
 	{
-		return TestHashItem( 'is_object', $list, $key, $fallback );
+		return self::test( 'is_array', $list, $key, $fallback );
 	}
 
-	function TestHashItemClass( string $class, array $list, string $key, $fallback = null )
+	public static function isBool( array $list, string $key ) : bool
 	{
-		return TestHashItem
+		return self::testIs( 'is_bool', $list, $key );
+	}
+
+	public static function getBool( array $list, string $key, $fallback = null )
+	{
+		return self::test( 'is_bool', $list, $key, $fallback );
+	}
+
+	public static function isNumeric( array $list, string $key ) : bool
+	{
+		return self::testIs( 'is_numeric', $list, $key );
+	}
+
+	public static function getNumeric( array $list, string $key, $fallback = null )
+	{
+		return self::test( 'is_numeric', $list, $key, $fallback );
+	}
+
+	public static function isObject( array $list, string $key ) : bool
+	{
+		return self::testIs( 'is_object', $list, $key );
+	}
+
+	public static function getObject( array $list, string $key, $fallback = null )
+	{
+		return self::test( 'is_object', $list, $key, $fallback );
+	}
+
+	public static function isClass( string $class, array $list, string $key ) : bool
+	{
+		return self::testIs
 		(
 			function( $value ) use ( $class ): bool
 			{
 				return is_a( $value, $class );
 			},
 			$list,
-			$key,
-			$fallback
+			$key
 		);
 	}
 
-	function TestHashItemIsTrue( array $list, string $key ) : bool
+	public static function getClass( string $class, array $list, string $key, $fallback = null )
 	{
-		return TestHashItemExists( $list, $key ) && $list[ $key ];
+		return ( self::isClass( $class, $list, $key ) ) ? $list[ $key ] : $fallback;
 	}
 
-	function TestHashItem( callable $function, array $list, string $key, $fallback = null )
+	public static function isTrue( array $list, string $key ) : bool
 	{
-		return ( TestHashItemExists( $list, $key, false ) && $function( $list[ $key ] ) ) ? $list[ $key ] : $fallback;
+		return self::getExists( $list, $key ) && $list[ $key ];
+	}
+
+	public static function test( callable $function, array $list, string $key, $fallback = null )
+	{
+		return ( self::testIs( $function, $list, $key ) ) ? $list[ $key ] : $fallback;
+	}
+
+	public static function testIs( callable $function, array $list, string $key ) : bool
+	{
+		return self::exists( $list, $key ) && $function( $list[ $key ] );
 	}
 }
